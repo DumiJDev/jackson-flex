@@ -1,10 +1,8 @@
 package io.github.dumijdev.jackson.flex;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +12,6 @@ import io.github.dumijdev.jackson.flex.annotations.JsonFlexGetter;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Objects;
 
 public class FlexObjectMapper extends ObjectMapper {
     @Override
@@ -66,7 +63,6 @@ public class FlexObjectMapper extends ObjectMapper {
         return super.treeToValue(newNode, valueType);
     }
 
-
     private JsonNode internalFlexReadTree(JsonNode node, Class<?> clazz) {
         var object = super.createObjectNode();
 
@@ -80,7 +76,7 @@ public class FlexObjectMapper extends ObjectMapper {
                 for (String step : srcPath) {
                     currentNode = currentNode.path(step);
                 }
-                if (!isNullNode(currentNode))
+                if (isNotNullNode(currentNode))
                     addToNode(object, dstPath, currentNode);
             } else if (field.isAnnotationPresent(JsonProperty.class)) {
                 var jsonProperty = field.getAnnotation(JsonProperty.class);
@@ -91,7 +87,7 @@ public class FlexObjectMapper extends ObjectMapper {
                 if (!"".equals(path)) {
                     var currentNode = node.path(path);
 
-                    if (!isNullNode(currentNode))
+                    if (isNotNullNode(currentNode))
                         addToNode(object, path, currentNode);
                 }
             } else if (field.isAnnotationPresent(JsonGetter.class)) {
@@ -103,14 +99,14 @@ public class FlexObjectMapper extends ObjectMapper {
                 if (!"".equals(path)) {
                     var currentNode = node.path(path);
 
-                    if (!isNullNode(currentNode))
+                    if (isNotNullNode(currentNode))
                         addToNode(object, path, currentNode);
                 }
             } else {
                 var path = field.getName();
                 var currentNode = node.path(path);
 
-                if (!isNullNode(currentNode))
+                if (isNotNullNode(currentNode))
                     addToNode(object, path, currentNode);
 
             }
@@ -119,8 +115,8 @@ public class FlexObjectMapper extends ObjectMapper {
         return object;
     }
 
-    private boolean isNullNode(JsonNode node) {
-        return node == null || node.isNull() || node.isMissingNode();
+    private boolean isNotNullNode(JsonNode node) {
+        return node != null && !node.isNull() && !node.isMissingNode();
     }
 
     private void addToNode(ObjectNode rootNode, String[] path, JsonNode value) {

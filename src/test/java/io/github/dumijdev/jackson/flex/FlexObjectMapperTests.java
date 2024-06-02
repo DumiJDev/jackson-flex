@@ -22,8 +22,12 @@ public class FlexObjectMapperTests {
     @SneakyThrows
     void shouldParseWithSuccessful() {
         var result = mapper.readValue(data, MyClass.class);
+        var text = mapper.writeValueAsString(result);
+
+        System.out.println(text);
 
         Assertions.assertEquals(result.getMercator().getCodename().name, "Paulo");
+        Assertions.assertNotEquals("", text);
     }
 
     @Test
@@ -38,10 +42,13 @@ public class FlexObjectMapperTests {
     @SneakyThrows
     void shouldParseListWithSuccessful() {
         var result = mapper.readValue(data1, MyClass1.class);
+        var text = mapper.writeValueAsString(result);
 
         System.out.println(result);
+        System.out.println(text);
 
         Assertions.assertTrue(!result.getNums().isEmpty());
+        Assertions.assertNotEquals("", text);
     }
 }
 
