@@ -12,6 +12,7 @@ import io.github.dumijdev.jackson.flex.annotations.JsonFlexGetter;
 
 import java.io.*;
 import java.net.URL;
+import java.util.Objects;
 
 public class FlexObjectMapper extends ObjectMapper {
     @Override
@@ -69,8 +70,8 @@ public class FlexObjectMapper extends ObjectMapper {
         for (var field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(JsonFlexGetter.class)) {
                 var annotation = field.getAnnotation(JsonFlexGetter.class);
-                String[] srcPath = annotation.src().split("\\.");
-                String[] dstPath = annotation.dst().split("\\.");
+                String[] srcPath = Objects.isNull(annotation.src()) ? new String[]{""} : annotation.src().split("\\.");
+                String[] dstPath = Objects.isNull(annotation.dst()) ? new String[]{""} :annotation.dst().split("\\.");
 
                 var currentNode = node;
                 for (String step : srcPath) {
