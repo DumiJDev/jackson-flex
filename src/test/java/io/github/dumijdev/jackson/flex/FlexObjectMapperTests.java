@@ -1,16 +1,9 @@
 package io.github.dumijdev.jackson.flex;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.dumijdev.jackson.flex.annotations.JsonFlexGetter;
-import lombok.Getter;
 import lombok.SneakyThrows;
-import lombok.ToString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class FlexObjectMapperTests {
 
@@ -52,32 +45,3 @@ public class FlexObjectMapperTests {
     }
 }
 
-@ToString
-@Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
-class MyClass {
-    @JsonFlexGetter(src = "data.name", dst = "mercator.codename.name")
-    @JsonProperty("mercator")
-    A mercator;
-}
-
-@ToString
-@Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
-class MyClass1 {
-    @JsonFlexGetter(src = "students", dst = "nums")
-    @JsonProperty("nums")
-    List<B> nums;
-}
-
-@ToString
-@Getter
-class A {
-    B codename;
-}
-
-@ToString
-@Getter
-class B {
-    String name;
-}
