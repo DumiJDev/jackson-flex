@@ -50,7 +50,7 @@ import io.github.dumijdev.jackson.flex.annotations.JsonFlexGetter;
 
 class StudentDTOSimple {
     @JsonFlexGetter(src = "data.name", dst = "name")
-    @JsonProperty("data")
+    @JsonProperty("name")
     String name;
 }
 ```
